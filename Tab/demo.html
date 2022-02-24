@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .container {
+        max-width: 800px;
+        margin: 30px auto;
+        padding: 16px;
+        border-radius: 4px;
+        box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.3);
+      }
+      .tab .tab-header {
+        position: relative;
+        display: flex;
+        font-size: 14px;
+        color: #303030;
+        line-height: 2;
+        font-weight: 500;
+        border-bottom: 2px solid #ddd;
+      }
+      .tab .tab-item {
+        margin-right: 30px;
+        margin-bottom: -2px;
+        cursor: pointer;
+      }
+      .tab .tab-line {
+        position: absolute;
+        top: 100%;
+        /* left: 0; 这里推荐是使用transform*/
+        transform: translateX(0);
+        width: 50px;
+        height: 2px;
+        background: #409eff;
+        transition: transform 0.1s;
+      }
+      .tab .tab-item.active {
+        color: #409eff;
+        /* border-bottom: 2px solid #409eff; */
+      }
+      .tab .tab-panel {
+        display: none;
+        padding: 16px 0;
+        font-size: 14px;
+      }
+      .tab .tab-panel.active {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="tab">
+        <div class="tab-header">
+          <span class="tab-item active">用户管理1</span>
+          <span class="tab-item">用户管理22</span>
+          <span class="tab-item">用户管理333</span>
+          <span class="tab-item">用户管理4444</span>
+          <span class="tab-line"></span>
+        </div>
+        <div class="tab-conntent">
+          <div class="tab-panel active">用户管理1</div>
+          <div class="tab-panel">用户管理2</div>
+          <div class="tab-panel">用户管理3</div>
+          <div class="tab-panel">用户管理4</div>
+        </div>
+      </div>
+    </div>
+    <script>
+      const $ = (tag) => document.querySelector(tag);
+      const $$ = (tags) => document.querySelectorAll(tags);
+      const $container = $(".container");
+      let $$items = $$(".container .tab-item");
+      let $$panels = $$(".container .tab-panel");
+      const $line = $(".container .tab-line");
+      //console.log($$items[0].offsetWidth);
+      $line.style.width = $$items[0].offsetWidth + "px";
+      $$items.forEach((e, i) => {
+        e.onclick = function () {
+          $$items.forEach((e) => e.classList.remove("active"));
+          $$panels.forEach((e) => e.classList.remove("active"));
+          this.classList.add("active");
+          $$panels[i].classList.add("active");
+          //console.log(this.offsetWidth,this.offsetLeft);
+
+          $line.style.width = this.offsetWidth + "px";
+          //transform: translateX(0);
+          $line.style.transform = `translateX(${this.offsetLeft}px)`;
+
+          //console.log($line.style.width,$line.style.left);
+        };
+      });
+
+      function animate(targetLeft) {
+        let i = 0;
+        console.log(
+          $line.offsetLeft,
+          targetLeft,
+          !($line.offsetLeft === targetLeft)
+        );
+        // while (!($line.offsetLeft === targetLeft)) {
+        //   console.log(1);
+        //   i++;
+
+        //   if ($line.offsetLeft > targetLeft) {
+        //     $line.style.left = $line.offsetLeft - i + "px";
+        //   } else {
+        //     $line.style.left = $line.offsetLeft + i + "px";
+        //   }
+        // }
+      }
+    </script>
+  </body>
+</html>

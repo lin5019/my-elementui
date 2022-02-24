@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .container {
+        max-width: 800px;
+        margin: 30px auto;
+        padding: 16px;
+        border-radius: 4px;
+        box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.3);
+      }
+      .tabs .tab-header {
+        position: relative;
+        display: flex;
+        font-size: 14px;
+        color: #303030;
+        line-height: 2;
+        font-weight: 500;
+        border-bottom: 2px solid #ddd;
+      }
+      .tabs .tab-item {
+        margin-right: 30px;
+        margin-bottom: -2px;
+        cursor: pointer;
+      }
+      .tabs .tab-line {
+        position: absolute;
+        top: 100%;
+        /* left: 0; 这里推荐是使用transform*/
+        transform: translateX(0);
+        width: 50px;
+        height: 2px;
+        background: #409eff;
+        transition: transform 0.1s;
+      }
+      .tabs .tab-item.active {
+        color: #409eff;
+        /* border-bottom: 2px solid #409eff; */
+      }
+      .tabs .tab-panel {
+        display: none;
+        padding: 16px 0;
+        font-size: 14px;
+      }
+      .tabs .tab-panel.active {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>选项卡1</h2>
+      <div class="tabs">
+        <div class="tab-header">
+          <span class="tab-item active">用户管理1</span>
+          <span class="tab-item">用户管理22</span>
+          <span class="tab-item">用户管理333</span>
+          <span class="tab-item">用户管理4444</span>
+          <span class="tab-line"></span>
+        </div>
+        <div class="tab-conntent">
+          <div class="tab-panel active">用户管理1</div>
+          <div class="tab-panel">用户管理2</div>
+          <div class="tab-panel">用户管理3</div>
+          <div class="tab-panel">用户管理4</div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <h2>选项卡2</h2>
+      <div class="tabs">
+        <div class="tab-header">
+          <span class="tab-item active">用户管理1</span>
+          <span class="tab-item">用户管理22</span>
+          <span class="tab-item">用户管理333</span>
+          <span class="tab-item">用户管理4444</span>
+          <span class="tab-line"></span>
+        </div>
+        <div class="tab-conntent">
+          <div class="tab-panel active">用户管理1</div>
+          <div class="tab-panel">用户管理2</div>
+          <div class="tab-panel">用户管理3</div>
+          <div class="tab-panel">用户管理4</div>
+        </div>
+      </div>
+    </div>
+    <script>
+      class Tab {
+        constructor($container) {
+          this.$container = $container;
+          this.$$items = $container.querySelectorAll(".tab-item");
+          this.$$panels = $container.querySelectorAll(".tab-panel");
+          this.$line = $container.querySelector(".tab-line");
+          this.init();
+          this.bind();
+        }
+        init() {
+          this.$line.style.width = this.$$items[0].offsetWidth + "px";
+        }
+        bind() {
+          let self = this;
+          this.$$items.forEach((e, i) => {
+            e.onclick = function () {
+              self.$$items.forEach(($item) => $item.classList.remove("active"));
+              self.$$panels.forEach(($panel) =>
+                $panel.classList.remove("active")
+              );
+              this.classList.add("active");
+              self.$$panels[i].classList.add("active");
+              self.$line.style.width = this.offsetWidth + "px";
+              self.$line.style.transform = `translateX(${this.offsetLeft}px)`;
+            };
+          });
+        }
+      }
+
+      const $ = (tag) => document.querySelector(tag);
+      const $$ = (tags) => document.querySelectorAll(tags);
+      const $container = $(".container");
+      $$(".tabs").forEach((tab) => new Tab(tab));
+
+      // let $$items = $$(".container .tab-item");
+      // let $$panels = $$(".container .tab-panel");
+      // const $line = $(".container .tab-line");
+      //console.log($$items[0].offsetWidth);
+
+      // $$items.forEach((e, i) => {
+      //   e.onclick = function () {
+      //     $$items.forEach((e) => e.classList.remove("active"));
+      //     $$panels.forEach((e) => e.classList.remove("active"));
+      //     this.classList.add("active");
+      //     $$panels[i].classList.add("active");
+      //     $line.style.width = this.offsetWidth + "px";
+      //     $line.style.transform = `translateX(${this.offsetLeft}px)`;
+      //   };
+      // });
+    </script>
+  </body>
+</html>
