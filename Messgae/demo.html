@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      .container {
+        max-width: 700px;
+        margin: 30px auto;
+        box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.3);
+        padding: 1rem;
+      }
+      .container .message-example {
+        display: flex;
+      }
+      .message-example .btn {
+        margin-right: 1rem;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        border: 1px solid rgba(0, 0, 0, 0.3);
+        background: #fff;
+        color: #000;
+      }
+      .message-example .btn:hover {
+        border: 1px solid #53a8ff;
+        color: #53a8ff;
+      }
+      .message-example .btn.click1 {
+        border: 1px solid #53a8ff;
+        color: #53a8ff;
+      }
+
+      .message-example .btn.click2 {
+        border: 1px solid #337ecc;
+        color: #337ecc;
+      }
+
+      .message {
+        position: fixed;
+        top: 0;
+        left: 50%;
+        transform: translate(-50%, -50px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-width: 330px;
+        height: 45px;
+
+        border-radius: 4px;
+        /* background: pink; */
+        opacity: 0;
+        transition: all 0.5s;
+      }
+      .message.show {
+        /* transform: translate(-50%, 10px); */
+        opacity: 1;
+      }
+      .message.success {
+        background-color: #67c23a;
+      }
+      .message.warning {
+        background-color: #e6a23c;
+      }
+      .message.info {
+        background-color: #909399;
+      }
+      .message.error {
+        background-color: #f56c6c;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>消息提示</h2>
+      <div class="message-example">
+        <button id="btn-success" class="btn">success</button>
+        <button id="btn-warning" class="btn">warning</button>
+        <button id="btn-info" class="btn">info</button>
+        <button id="btn-error" class="btn">error</button>
+        <div class="messageList"></div>
+      </div>
+    </div>
+    <script>
+      class Message {
+        constructor({ type = "success", text = "success!" }) {
+          this.type = type;
+          this.text = text;
+          this.messageList = [];
+          this.$box = document.querySelector(".messageList");
+          this.render();
+          this.bind();
+        }
+        render() {
+          let $div = document.createElement("div");
+          //this.message = $div;
+          this.messageList.push($div);
+          $div.innerHTML = this.text;
+          $div.classList.add("message");
+          $div.classList.add(this.type);
+          console.log($div);
+          this.$box.appendChild($div);
+          this.$$list = document.querySelectorAll(".message");
+        }
+        bind() {
+          setTimeout(() => this.show());
+          setTimeout(() => this.destroy(), 1000);
+        }
+        show() {
+          this.messageList.forEach((msg) => {
+            msg.classList.add("show");
+            msg.style.transform = `translate(-50%, ${
+              10 + (this.$$list.length - 1) * 50
+            }px)`;
+          });
+          //console.log("出来了!");
+        }
+        destroy() {
+          this.messageList.forEach((msg) => {
+            msg.classList.remove("show");
+            msg.style.transform = `translate(-50%, -50px)`;
+          });
+
+          setTimeout(() => this.$box.removeChild(this.messageList.pop()), 500);
+          //console.log("消失了!");
+        }
+      }
+
+      document
+        .querySelector("#btn-success")
+        .addEventListener("click", function () {
+          new Message({ type: "success" });
+        });
+      document
+        .querySelector("#btn-warning")
+        .addEventListener("click", function () {
+          new Message({ type: "warning", text: "warning!!!!" });
+        });
+      document
+        .querySelector("#btn-info")
+        .addEventListener("click", function () {
+          new Message({ type: "info", text: "info!" });
+        });
+      document
+        .querySelector("#btn-error")
+        .addEventListener("click", function () {
+          new Message({ type: "error", text: "error!" });
+        });
+
+      let $$btn = document.querySelectorAll(".btn");
+
+      $$btn.forEach((btn) => {
+        btn.addEventListener("mousedown", function () {
+          //console.log("点击");
+          $$btn.forEach((btn) => btn.classList.remove("click1"));
+          this.classList.add("click1");
+          this.classList.add("click2");
+        });
+      });
+      $$btn.forEach((btn) => {
+        btn.addEventListener("mouseup", function () {
+          //console.log("松开");
+          this.classList.remove("click2");
+        });
+      });
+    </script>
+  </body>
+</html>
