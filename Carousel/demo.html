@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      ul {
+        list-style: none;
+      }
+      a {
+        text-decoration: none;
+        color: #000;
+      }
+      .container {
+        max-width: 900px;
+        margin: 30px auto;
+        border-radius: 4px;
+        box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.3);
+        padding: 16px;
+      }
+      .carousel {
+        position: relative;
+        margin-top: 30px;
+        height: 200px;
+        overflow: hidden;
+      }
+      .panels > a {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 0;
+        opacity: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 4px;
+      }
+      .panels .active {
+        z-index: 1;
+        opacity: 1;
+      }
+
+      .panels > a:nth-child(even) {
+        background-color: rgb(224, 41, 9);
+      }
+      .panels > a:nth-child(odd) {
+        background-color: rgb(16, 226, 198);
+      }
+      .arrows .arrow-pre,
+      .arrows .arrow-next {
+        position: absolute;
+        top: 50%;
+        z-index: 100;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background-color: rgba(0, 0, 0, 0.15);
+        border: none;
+        cursor: pointer;
+      }
+      .arrows .arrow-pre {
+        left: 0;
+        transform: translate(-50px, -50%);
+        opacity: 0;
+        transition: all 0.5s;
+      }
+      .arrows .arrow-next {
+        right: 0;
+        transform: translate(50px, -50%);
+        opacity: 0;
+        transition: all 0.5s;
+      }
+      .carousel:hover .arrows .arrow-pre {
+        transform: translate(10px, -50%);
+        opacity: 1;
+      }
+      .carousel:hover .arrows .arrow-next {
+        transform: translate(-10px, -50%);
+        opacity: 1;
+      }
+
+      .arrows .arrow-pre::after,
+      .arrows .arrow-next::after {
+        content: "";
+        display: block;
+        width: 10px;
+        height: 10px;
+        border-top: 1px solid #fff;
+        border-right: 1px solid #fff;
+      }
+      .arrows .arrow-pre::after {
+        transform: rotate(-135deg);
+      }
+      .arrows .arrow-next::after {
+        transform: rotate(45deg);
+      }
+      .indicators {
+        position: absolute;
+        left: 50%;
+        bottom: 10px;
+        z-index: 100;
+        transform: translateX(-50%);
+        display: flex;
+        padding: 0 10px;
+      }
+      .indicators .item {
+        padding: 5px 0;
+        cursor: pointer;
+      }
+      .indicators .item::after {
+        content: "";
+        display: block;
+        width: 30px;
+        height: 3px;
+        margin-right: 10px;
+        background-color: #c0c4cc;
+      }
+      .indicators .item.active::after {
+        background-color: #fff;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Carousel 轮播图</h2>
+      <div class="carousel">
+        <div class="panels">
+          <a class="active" href="#">0</a>
+          <a href="#">1</a>
+          <a href="#">2</a>
+          <a href="#">3</a>
+        </div>
+        <div class="arrows">
+          <button class="arrow-pre"></button>
+          <button class="arrow-next"></button>
+        </div>
+        <ul class="indicators">
+          <li class="active item"></li>
+          <li class="item"></li>
+          <li class="item"></li>
+          <li class="item"></li>
+        </ul>
+      </div>
+    </div>
+    <script>
+      let $ = (element) => document.querySelector(element);
+      let $$ = (elements) => document.querySelectorAll(elements);
+      const $arrowPre = $(".arrow-pre");
+      const $arrowNext = $(".arrow-next");
+      const $$items = $$(".indicators .item");
+      const $$panels = $$(".panels>a");
+
+      const getIndex = () => [...$$items].indexOf($(".indicators .active"));
+      const getPreIndex = () =>
+        (getIndex() - 1 + $$items.length) % $$items.length;
+      const getNextIndex = () => (getIndex() + 1) % $$items.length;
+
+      const setPage = (index) => {
+        $$panels.forEach(($node) => $node.classList.remove("active"));
+        $$items.forEach(($node) => $node.classList.remove("active"));
+        $$panels[index].classList.add("active");
+        $$items[index].classList.add("active");
+      };
+
+      $arrowPre.onclick = () => {
+        let preIndex = getPreIndex();
+        setPage(preIndex);
+      };
+      $arrowNext.onclick = () => {
+        let nextIndex = getNextIndex();
+        setPage(nextIndex);
+      };
+      $$items.forEach(($item, i) => {
+        $item.onclick = function () {
+          setPage(i);
+        };
+      });
+    </script>
+  </body>
+</html>

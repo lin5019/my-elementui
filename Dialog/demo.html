@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      .container {
+        max-width: 900px;
+        margin: 30px auto;
+        box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.3);
+        padding: 16px;
+      }
+      .container h2 {
+        margin-bottom: 50px;
+        font-weight: normal;
+      }
+      .container .btn {
+        padding: 0.5rem 1rem;
+        font-size: 18px;
+        border-radius: 4px;
+        border: 1px solid rgba(0, 0, 0, 0.3);
+        background: #fff;
+        color: rgba(0, 0, 0, 0.7);
+        cursor: pointer;
+      }
+
+      .container .btn.primary {
+        background-color: lightskyblue;
+        border: 1px solid transparent;
+        color: #fff;
+      }
+      .container .btn:hover,
+      .container .btn.primary:hover {
+        border: 1px solid #337ecc;
+        color: #337ecc;
+      }
+      .dialog {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: rgba(0, 0, 0, 0.3);
+        opacity: 0;
+        display: none;
+        transition: all 0.5s;
+      }
+      .dialog.show {
+        display: block;
+      }
+      .dialog.appear {
+        opacity: 1;
+      }
+
+      .dialog .main {
+        position: absolute;
+        left: 50%;
+        top: 0;
+        transform: translate(-50%, -100%);
+        width: 40%;
+        padding: 16px;
+        background-color: #fff;
+        border-radius: 4px;
+        box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.3);
+        font-size: 22px;
+        opacity: 0;
+        transition: all 0.5s;
+      }
+      .dialog.appear .main {
+        transform: translate(-50%, 100%);
+        opacity: 1;
+      }
+      .main .header {
+        display: flex;
+        /* justify-content: center;
+        align-items: center; */
+      }
+      .header .close {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-left: auto;
+        padding: 15px;
+        background-color: #fff;
+        border: 0;
+        cursor: pointer;
+      }
+      .header .close::before,
+      .header .close::after {
+        position: absolute;
+        content: "";
+        display: block;
+        width: 20px;
+        height: 2px;
+        background-color: #000;
+        transform: rotate(45deg);
+      }
+      .header .close::after {
+        transform: rotate(-45deg);
+      }
+      .main .content {
+        margin-top: 30px;
+      }
+      .main .footer {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 30px;
+      }
+      .footer .btn-cancel {
+        margin-right: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Dialog 对话窗口</h2>
+      <button class="btn btn-open">打开弹窗</button>
+      <div class="dialog">
+        <div class="main">
+          <div class="header">
+            <span class="tip">提示</span>
+            <button class="close"></button>
+          </div>
+          <div class="content">info...</div>
+          <div class="footer">
+            <button class="btn btn-cancel">取消</button>
+            <button class="btn primary btn-ok">确定</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      class Dialog {
+        constructor($root, options = {}) {
+          this.$root = $root;
+          this.onOk = options.onOk || function () {};
+          this.onCancel = options.onCancel || function () {};
+          this.bind();
+        }
+        bind() {
+          let self = this;
+          this.$root.querySelector(".close").onclick = function () {
+            self.hide();
+            self.onCancel();
+          };
+          this.$root.querySelector(".btn-cancel").onclick = function () {
+            self.hide();
+            self.onCancel();
+          };
+          this.$root.querySelector(".btn-ok").onclick = function () {
+            self.hide();
+            self.onOk();
+          };
+        }
+        hide() {
+          this.$root.classList.remove("appear");
+          setTimeout(() => this.$root.classList.remove("show"), 600);
+        }
+        show() {
+          this.$root.classList.add("show");
+          setTimeout(() => this.$root.classList.add("appear"), 200);
+        }
+      }
+      let $dialog = document.querySelector(".dialog");
+      const dialog1 = new Dialog($dialog, {
+        onOk() {
+          console.log("ok!");
+        },
+        onCancel() {
+          console.log("cancel!");
+        },
+      });
+      document.querySelector(".btn-open").onclick = function () {
+        dialog1.show();
+      };
+    </script>
+  </body>
+</html>
